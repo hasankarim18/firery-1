@@ -1,6 +1,9 @@
+
+
 import { initializeApp } from "firebase/app";
 import {
-    getFirestore, collection, getDocs
+    getFirestore, collection, getDocs, addDoc,
+    deleteDoc, doc
 } from 'firebase/firestore'
 
 import { firebaseConfig } from './fireobj'
@@ -43,5 +46,40 @@ getDocs(colRef)
     })
 
 
+// adding a document 
 
+const addBookForm = document.querySelector('.add')
+
+addBookForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+    console.log(addBookForm.title.value)
+    console.log(addBookForm.author.value)
+    addDoc(colRef, {
+        title: addBookForm.title.value,
+        author: addBookForm.author.value
+    })
+        .then((res) => {
+            addBookForm.reset()
+        })
+        .catch((res) => {
+            console.log(res)
+        })
+})
+
+
+const deleteBookForm = document.querySelector('.delete')
+deleteBookForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+
+    const docRef = doc(db, 'books', deleteBookForm.id.value)
+
+    deleteDoc(docRef)
+        .then(res => {
+            deleteBookForm.reset()
+        })
+        .catch(err => {
+            console.log(err)
+        })
+
+})
 
